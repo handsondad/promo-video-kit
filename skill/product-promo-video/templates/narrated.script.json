@@ -1,0 +1,19 @@
+{
+  "voice": "zh-CN-YunyangNeural",
+  "rate": "+4%",
+  "lead": 0.45,
+  "tail": 0.7,
+  "firstLead": 0.7,
+  "fps": 30,
+  "data": {
+    "footage": { "step1": { "dir": "frames/step1", "count": 0, "fps": 3, "speed": 6 } }
+  },
+  "scenes": [
+    { "id": "hook", "min": 7.8, "vo": "一个具体的变化发生了。我们原来的做法，还撑得住吗？" },
+    { "id": "problem", "min": 9, "vo": "第一个有出处的数字，第二个有出处的数字。决定一旦做出，几乎没有回头路。" },
+    { "id": "position", "min": 8.5, "vo": "YourProduct，让谁在什么时候，做成什么。" },
+    { "id": "step1", "min": 12, "vo": "第一步，用户做了一件简单的事，产品替他完成了复杂的部分。" },
+    { "id": "result", "min": 6.5, "vo": "在这个示范里，关键指标从 A 变成了 B。" },
+    { "id": "end", "min": 7, "vo": "YourProduct。从一个问题开始。" }
+  ]
+}

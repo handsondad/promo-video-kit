@@ -1,0 +1,11 @@
+{
+  "slug": "blueprint",
+  "cn": "蓝图工程",
+  "en": "Blueprint",
+  "category": "工程与技术",
+  "tone": "dark",
+  "line": "蓝图纸上的白色线稿与构造线，字像绘图仪一样逐笔画出，黄色铅笔只用于标注和尺寸。",
+  "fits": ["架构、原理、工作流讲解", "工程 / 制造 / 硬件类产品", "技术白皮书配套短片"],
+  "sound": "ambient",
+  "cuts": ["motion", "narrated"]
+}

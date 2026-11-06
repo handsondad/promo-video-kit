@@ -1,0 +1,42 @@
+/* whiteboard 白板手绘: a matte board, black marker, three marker colours, hand-lettered headings, wobbly boxes. */
+:root {
+  --bg: #f6f5f1; --ink: #1d1d1f; --sub: #47474c; --dim: #86868b; --line: rgba(29, 29, 31, .22);
+  --card: #ffffff; --card-line: transparent; --card-shadow: none; --radius: 14px 18px 12px 16px;
+  --track: rgba(29, 29, 31, .08); --knob: #1d1d1f;
+  --accent: #e0352b; --accent-ink: #ffffff; --good: #177a43; --warn: #b45f06; --bad: #e0352b;
+  --c1: #1f5fd1; --c2: #1f5fd1; --c3: #7a4fd0; --c4: #ef8a17; --c5: #1f9d55; --c6: #e0352b;
+  --warm: linear-gradient(90deg, var(--accent), var(--accent)); --cool: linear-gradient(90deg, #1f5fd1, #1f5fd1);
+  --font: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", "Segoe UI", sans-serif;
+  --head: "Segoe Print", "Ink Free", "Comic Neue", "LXGW WenKai", "KaiTi", "STKaiti", "Kaiti SC", cursive;
+  --head-weight: 700; --head-track: 0;
+}
+.stage { background: radial-gradient(ellipse at 50% 40%, #fbfaf7 0%, #f1efe9 70%, #e7e4dc 100%); }
+.stage::after { content: ""; position: absolute; inset: 0; opacity: .5; background:
+  radial-gradient(600px 200px at 20% 30%, rgba(30, 30, 30, .025), transparent 70%),
+  radial-gradient(700px 240px at 75% 70%, rgba(30, 30, 30, .02), transparent 70%); }
+:where(.card:not(.abs)) { position: relative; }
+.card::after { content: ""; position: absolute; inset: -2px; border: 3px solid var(--ink); border-radius: var(--radius); filter: url(#wb-rough); pointer-events: none; }
+.bar3 { border-bottom: 2px dashed var(--line); }
+.bar3 i { background: transparent; border: 2px solid var(--ink); }
+.bar3 .t { color: var(--ink); font-family: var(--head); }
+.chap { color: var(--sub); letter-spacing: .12em; font-family: var(--head); font-size: 24px; }
+.chap b { background: none; color: var(--accent); -webkit-text-fill-color: var(--accent); font-size: 30px; }
+.chap em { background: var(--ink); height: 3px; border-radius: 3px; filter: url(#wb-rough); }
+.ctitle .num { font-family: var(--head); -webkit-text-stroke: 0; color: var(--accent); font-weight: 700; font-size: 220px; transform: rotate(-4deg); }
+.ctitle .ts { font-family: var(--head); color: var(--c1); }
+.cap { font-family: var(--head); color: var(--ink); font-size: 40px; }
+.hub .orb { background: #fff; box-shadow: none; border: 3px solid var(--ink); filter: url(#wb-rough); }
+.hub .ringline { stroke: var(--c1); stroke-opacity: .7; stroke-dasharray: 10 8; }
+.mk-glow { display: none; }
+.mk-body { fill: #fff; stroke: var(--ink); stroke-width: 5px; filter: url(#wb-rough); }
+.mk-line { stroke: var(--accent); }
+.mk-dot { fill: var(--accent); }
+.pill { border-radius: 30px 22px 28px 24px; color: var(--ink); background: #fff3a8; border: 0; transform: rotate(-1.2deg); }
+.btn { border-radius: 30px 24px 28px 22px; color: #fff; background: var(--accent); font-family: var(--head); }
+.agent .pg { background: transparent; border: 2px solid var(--ink); height: 10px; border-radius: 8px; }
+.sub { background: #fff; color: var(--ink); border: 2.5px solid var(--ink); border-radius: 18px 14px 20px 12px; }
+.foot { color: var(--sub); }
+.curtain { background: #f6f5f1; }
+.gradtext { background: none; color: var(--c1); -webkit-text-fill-color: var(--c1); }
+.h { -webkit-text-stroke: .4px currentColor; }
+.ghost { border-radius: 30px 22px 28px 24px; border: 2.5px solid var(--ink); background: #fff3a8; transform: rotate(-.8deg); }

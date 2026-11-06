@@ -1,0 +1,11 @@
+/* Brand layer, loaded after the style when the timeline says "brand": "brand.css", so anything set here wins.
+   Take every value from the brand's own guide or design file and set only what the brand fixes; the style keeps the
+   rest. A brand colour too dark or too light for the style's ground stays an accent (fills, rules, the mark) and never
+   becomes body text: check.mjs measures the contrast. */
+:root {
+  /* --accent: #0a66ff;  --accent-ink: #ffffff; */
+  /* --c1: #0a66ff;  --c2: #00b3a4;  --c3: #ffb020;   chart and highlight colours, in the brand's order */
+  /* --font: "Brand Sans", system-ui, sans-serif;  --head: "Brand Display", var(--font);  --head-weight: 700; */
+  /* --radius: 12px; */
+}
+/* The mark: replace the template's <symbol id="mark"> with the brand's own SVG; never redraw or recolour a logo. */

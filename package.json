@@ -1,0 +1,21 @@
+{
+  "name": "promo-video-kit",
+  "version": "1.1.0",
+  "description": "Product promo videos rendered frame by frame from HTML, as an agent skill plus its tools",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "bin": {
+    "promo": "bin/promo.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node tests/run.mjs unit",
+    "test:e2e": "node tests/run.mjs e2e",
+    "doctor": "node bin/promo.mjs doctor",
+    "setup": "node bin/promo.mjs setup",
+    "install-skill": "node bin/promo.mjs install"
+  }
+}

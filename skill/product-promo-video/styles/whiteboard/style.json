@@ -1,0 +1,11 @@
+{
+  "slug": "whiteboard",
+  "cn": "白板手绘",
+  "en": "Whiteboard",
+  "category": "讲解与培训",
+  "tone": "light",
+  "line": "哑光白板、黑色马克笔和三种彩笔；标题逐字手写，框线略歪，用红笔圈出重点。",
+  "fits": ["概念讲解、上手教程", "内部培训、方案说明", "面向非技术观众的产品介绍"],
+  "sound": "felt",
+  "cuts": ["narrated", "motion"]
+}

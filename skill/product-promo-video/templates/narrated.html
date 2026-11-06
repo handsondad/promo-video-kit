@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Narrated promo</title>
+<link rel="stylesheet" href="kit.css">
+<style>
+  /* Layout only; colours come from the style's variables (kit.css lists them). */
+  .kicker { display: inline-flex; align-items: center; gap: 12px; font-size: 28px; font-weight: 700; letter-spacing: .2em; color: var(--ink); }
+  .kicker::before { content: ""; width: 36px; height: 2px; background: var(--cool); }
+  .h1 { font-size: 112px; line-height: 1.15; }
+  .h2 { font-size: 72px; line-height: 1.2; }
+  .center { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  #hook .pill { font-size: 40px; padding: 12px 30px; margin-top: 26px; }
+  #problem { padding: 120px 150px; }
+  #problem .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; margin-top: 70px; }
+  #problem .card { padding: 44px 44px 40px; }
+  #problem .n { font-family: var(--head); font-size: 120px; font-weight: 800; line-height: 1; }
+  #problem .d { font-size: 28px; color: var(--sub); margin-top: 22px; line-height: 1.5; }
+  #problem .src { position: absolute; left: 150px; bottom: 150px; font-size: 28px; color: var(--sub); }
+  .side { position: absolute; left: 120px; top: 190px; width: 560px; }
+  .side .num { font-family: var(--head); font-size: 150px; font-weight: 800; line-height: 1; }
+  .side .title { font-size: 64px; margin-top: 20px; line-height: 1.2; }
+  .side .desc { font-size: 30px; color: var(--sub); line-height: 1.6; margin-top: 26px; }
+  /* .shot = a light app window holding real footage; the image is moved/scaled inside .view for punch-ins. */
+  .shot { position: absolute; left: 730px; top: 160px; width: 1100px; border-radius: 18px; overflow: hidden; background: #fff; box-shadow: 0 40px 120px rgba(0,0,0,.45), 0 0 0 1px var(--line); }
+  .shot .wbar { height: 40px; background: #eef2f8; display: flex; align-items: center; gap: 9px; padding: 0 16px; }
+  .shot .wbar i { width: 13px; height: 13px; border-radius: 50%; background: #cbd5e1; display: block; }
+  .shot .wbar span { margin-left: 14px; font-size: 16px; color: #64748b; }
+  .shot .view { position: relative; overflow: hidden; height: 619px; background: linear-gradient(135deg, #e2e8f0, #f8fafc); }
+  .shot .view img { position: absolute; left: 0; top: 0; width: 100%; transform-origin: 0 0; }
+  .shot .ph { position: absolute; inset: 0; display: grid; place-items: center; color: #64748b; font-size: 26px; padding: 0 60px; text-align: center; }
+  .badge { position: absolute; right: 18px; top: 58px; z-index: 3; padding: 8px 20px; border-radius: 999px; font-size: 28px; font-weight: 700; background: rgba(15,23,42,.82); color: #fff; }
+  .kpi { padding: 30px 36px; margin-top: 24px; width: 760px; }
+  .kpi .l { font-size: 30px; color: var(--sub); }
+  .kpi .after { display: inline-block; }
+  .kpi .v { font-family: var(--head); font-size: 74px; font-weight: 800; margin-top: 8px; }
+  #end .btn { margin-top: 70px; font-size: 36px; padding: 18px 44px; }
+  #end .disc { position: absolute; left: 0; right: 0; bottom: 58px; font-size: 28px; color: var(--sub); text-align: center; }
+</style>
+<script src="kit.js"></script>
+<script>K.useStyle('nebula')</script>
+</head>
+<body>
+<div class="stage"></div>
+<canvas class="layer" id="bg"></canvas>
+
+<!-- hook: the outcome or pain in the first seconds, no logo -->
+<section class="scene center" id="hook">
+  <div class="kicker m"><span>一个具体的时刻</span></div>
+  <div class="h1 h m" style="margin-top:30px"><span>发生了什么变化</span></div>
+  <div class="m"><span class="pill">一个关键数字 A → B</span></div>
+  <div class="h1 h m" style="margin-top:60px;font-size:96px"><span class="gradtext">那个让人睡不着的问题？</span></div>
+</section>
+
+<!-- problem: the cost of the status quo, with sourced numbers -->
+<section class="scene" id="problem">
+  <div class="kicker m"><span>问题</span></div>
+  <div class="h2 h m" style="margin-top:24px"><span>为什么<span class="gradtext">现在必须解决</span></span></div>
+  <div class="cards">
+    <div class="card"><div class="n" data-count="63" data-suffix="%" style="color:var(--bad)">0</div><div class="d">有出处的数字一</div></div>
+    <div class="card"><div class="n" data-count="37" data-suffix="%" style="color:var(--warn)">0</div><div class="d">有出处的数字二</div></div>
+    <div class="card"><div class="n" style="color:var(--c1)">1×</div><div class="d">一个结构性约束</div></div>
+  </div>
+  <div class="src">来源：报告名称，发布机构，日期</div>
+</section>
+
+<!-- position: name + one-line promise -->
+<section class="scene center" id="position">
+  <div class="lock" style="position:static"><div class="name h gradtext">YourProduct</div></div>
+  <div class="m" data-hold style="margin-top:60px;font-size:40px;color:var(--sub)"><span>一句话：它让谁，在什么时候，做成什么</span></div>
+</section>
+
+<!-- step: real UI footage (image sequence from a screen recording), fast-forwarded, with a slow punch-in -->
+<section class="scene" id="step1">
+  <div class="side"><div class="num gradtext">01</div><div class="title h">第一步<br>做了什么</div><div class="desc">一两句描述，<br>和旁白呼应。</div></div>
+  <div class="shot"><div class="wbar" data-noread><i></i><i></i><i></i><span>YourProduct · 页面名</span></div>
+    <div class="view"><img class="clip" alt=""><div class="ph" data-noread>把录屏帧放到 frames/step1/0001.jpg…，并在 timeline 的 data.footage 里写上数量</div></div>
+    <div class="badge">实时录屏 · 6 倍快进</div>
+  </div>
+</section>
+
+<!-- result: the outcome, held long; numbers verbatim from real output -->
+<section class="scene" id="result">
+  <div class="side" style="top:200px;width:800px">
+    <div class="kicker m"><span>结果</span></div>
+    <div class="kpi card"><div class="l">关键指标</div><div class="v">A → <span class="after" style="color:var(--good)">B</span></div></div>
+    <div class="kpi card"><div class="l">第二个指标</div><div class="v">C → <span class="after" style="color:var(--warn)">D</span></div></div>
+  </div>
+</section>
+
+<section class="scene center" id="end">
+  <div class="lock" style="position:static"><div class="name h gradtext">YourProduct</div></div>
+  <div class="m h" style="margin-top:54px;font-size:44px"><span>收尾口号</span></div>
+  <div class="m"><span class="btn">唯一的行动号召</span></div>
+  <div class="disc">必要的免责声明 / 数据说明</div>
+</section>
+
+<div class="foot" id="foot">贯穿演示段落的小字说明（如：示范数据，不构成建议）</div>
+<div class="sub" id="sub"></div>
+<div class="curtain" id="curtain"></div>
+
+<script>
+const { $, $$, inout } = K;
+const DATA = TIMELINE.data ?? {};
+const FOOT = DATA.footage?.step1;
+const STEP1 = FOOT?.count ? K.frames(FOOT.dir, FOOT.count) : [];
+
+// Scene time at a fraction of the scene's narration (0 = the voice starts, 1 = it ends): reveal a piece as it is named.
+const onVoice = (s, f) => (s.vo ? s.vo.start - s.start + f * s.vo.dur : f * s.dur);
+
+const RENDER = {
+  hook(l, s) {
+    const [k, a, p, q] = $$('#hook > .m');
+    K.mask(k, l, -1.2); K.mask(a, l, onVoice(s, .05)); K.mask(p, l, onVoice(s, .4)); K.mask(q, l, onVoice(s, .65), .9);
+  },
+  problem(l, s) {
+    const [k, h] = $$('#problem > .m');
+    K.mask(k, l, .05); K.mask(h, l, .25);
+    $$('#problem .card').forEach((c, i) => {
+      const at = onVoice(s, .1 + i * .3);
+      K.item(c, l, at, { d: .7, dy: 34 });
+      const n = $('.n', c);
+      if (n.dataset.count) K.count(n, l, at, Number(n.dataset.count), { suffix: n.dataset.suffix });
+    });
+    K.item($('#problem .src'), l, onVoice(s, .1) + .8, { dy: 0 });
+  },
+  position(l, s) {
+    K.item($('#position .lock'), l, 0, { d: .7, dy: 30 });
+    K.mask($('#position > .m'), l, 2.1, .9);
+  },
+  async step1(l) {
+    const side = $('#step1 .side');
+    K.item($('.num', side), l, .05); K.item($('.title', side), l, .25); K.item($('.desc', side), l, .5);
+    K.item($('#step1 .shot'), l, .2, { d: .8, dy: 50 });
+    const img = $('#step1 .clip');
+    $('#step1 .ph').style.display = STEP1.length ? 'none' : 'grid';
+    $('#step1 .badge').style.opacity = STEP1.length ? 1 : 0;
+    if (!STEP1.length) return;
+    // Source time = scene time × speed, in frames at the extraction fps; hold the last frame.
+    const i = Math.min(STEP1.length - 1, Math.floor(l * FOOT.speed * FOOT.fps));
+    await K.setSrc(img, STEP1[i]);
+    // Punch-in: ease from the whole screen onto the region that matters (tune the numbers with --preview).
+    const z = inout((l - 1) / 4);
+    img.style.transform = `translate(${-z * 300}px, ${-z * 120}px) scale(${1 + z * .5})`;
+  },
+  result(l, s) {
+    K.mask($('#result .kicker'), l, .05);
+    // Each metric arrives, then its after-value lands as the voice reaches it.
+    $$('#result .kpi').forEach((k, i) => {
+      K.item(k, l, onVoice(s, i * .5), { d: .7, dy: 30 });
+      K.item($('.after', k), l, onVoice(s, i * .5 + .4), { d: .5, dy: 0, scale: .6 });
+    });
+  },
+  end(l) {
+    K.item($('#end .lock'), l, .1, { d: 1.1, dy: 30 });
+    const [lead, cta] = $$('#end > .m');
+    K.mask(lead, l, 1.3, .8); K.mask(cta, l, 2.1, .8);
+    K.item($('#end .disc'), l, 2.6, { dy: 0 });
+  },
+};
+
+const cues = K.subCues(TIMELINE.scenes);
+K.film(RENDER, {
+  fadeIn: .35, fadeOut: .25, curtain: $('#curtain'),
+  after(t) {
+    K.subtitles($('#sub'), cues, t);
+    const inDemo = ['step1', 'result'].some((id) => { const s = K.scene(id); return s && t >= s.start && t < s.start + s.dur; });
+    $('#foot').style.opacity = inDemo ? .95 : 0;
+  },
+});
+</script>
+</body>
+</html>

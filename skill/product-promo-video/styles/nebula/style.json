@@ -1,0 +1,11 @@
+{
+  "slug": "nebula",
+  "cn": "星云玻璃",
+  "en": "Nebula Glass",
+  "category": "科技发布",
+  "tone": "dark",
+  "line": "深蓝紫星空上的玻璃卡片，逐字从模糊中浮现，粒子收拢爆出 logo。",
+  "fits": ["AI / 开发者工具发布", "平台型产品总览", "社媒短片、官网首屏"],
+  "sound": "synth",
+  "cuts": ["motion", "narrated"]
+}

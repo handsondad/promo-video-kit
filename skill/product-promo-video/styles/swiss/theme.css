@@ -1,0 +1,39 @@
+/* swiss 瑞士网格: paper, ink, greys and one signal colour; flush left on a 12-column grid; nothing bounces. */
+:root {
+  --bg: #eae9e5; --ink: #111111; --sub: #4a4a47; --dim: #8b8a85; --line: #cfcdc6;
+  --card: #ffffff; --card-line: transparent; --card-shadow: none; --radius: 0px; --track: #e3e1db; --knob: #c9c7c0;
+  --accent: #e30613; --accent-ink: #ffffff; --good: #111111; --warn: #111111; --bad: #e30613;
+  --c1: #111111; --c2: #111111; --c3: #6b6a66; --c4: #e30613; --c5: #3d3d3b; --c6: #9a9893;
+  --warm: linear-gradient(90deg, var(--accent), var(--accent)); --cool: linear-gradient(90deg, var(--accent), var(--accent));
+  --font: "Inter", "Helvetica Neue", "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  --head-weight: 800; --head-track: -.025em;
+}
+/* the 12-column grid: 96 px margins, 24 px gutters, drawn faintly so the layout can be read against it */
+.stage { background: repeating-linear-gradient(90deg, rgba(17,17,17,.055) 0 1px, transparent 1px 146px) 96px 0 / calc(100% - 192px) 100% no-repeat, var(--bg); }
+.center-x { text-align: left; padding-left: 120px; padding-right: 120px; }
+.lock, .ctitle { justify-content: flex-start; padding-left: 120px; }
+.center { align-items: flex-start !important; text-align: left !important; padding-left: 150px; }
+.card { border-top: 6px solid var(--ink); }
+.bar3 { border-bottom: 1px solid var(--line); }
+.bar3 i { border-radius: 0; background: var(--ink); width: 10px; height: 10px; }
+.bar3 .t { text-align: left; color: var(--ink); font-weight: 700; }
+.chap { letter-spacing: .02em; color: var(--ink); font-size: 20px; text-transform: lowercase; }
+.chap b { background: none; color: var(--accent); -webkit-text-fill-color: var(--accent); font-size: 20px; }
+.chap em { background: var(--ink); width: 64px; height: 2px; }
+.ctitle .num { -webkit-text-stroke: 0; color: var(--ink); font-size: 340px; letter-spacing: -.06em; font-weight: 800; }
+.ctitle .tt { font-size: 96px; }
+.ctitle .ts { color: var(--sub); font-weight: 500; border-top: 1px solid var(--ink); padding-top: 12px; }
+.cap { font-weight: 700; }
+.hub .orb { border-radius: 0; background: var(--accent); box-shadow: none; inset: 40px; }
+.hub .ringline { stroke: var(--ink); stroke-opacity: 1; }
+.mk-glow { display: none; }
+.mk-body { fill: var(--accent); rx: 0; }
+.pill { border-radius: 0; color: var(--ink); background: transparent; border: 0; border-left: 6px solid var(--accent); padding-left: 18px; }
+.btn { border-radius: 0; }
+.dot { border-radius: 0; }
+.agent .pg, .agent .pg i, .metric .tr, .metric .tr i { border-radius: 0 !important; }
+.sub { left: 120px; transform: none; text-align: left; background: transparent; color: var(--ink); font-weight: 700; padding: 10px 0 0; border-top: 2px solid var(--ink); border-radius: 0; }
+.foot { text-align: left; padding-left: 120px; color: var(--sub); }
+.curtain { background: var(--bg); }
+.gradtext { background: none; color: var(--accent); -webkit-text-fill-color: var(--accent); }
+.ghost { border-radius: 0; border: 0; border-left: 6px solid var(--accent); background: transparent; padding: 8px 0 8px 18px; font-weight: 700; }

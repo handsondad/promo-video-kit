@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Layout patterns</title>
+<link rel="stylesheet" href="kit.css">
+<style>
+  /* Layout only; colours come from the style's variables (kit.css lists them). */
+  .per { left: 120px; width: 760px; padding: 24px 30px; }
+  .per .pt { font-size: 30px; font-weight: 700; display: flex; justify-content: space-between; }
+  .per .pt span { font-size: 28px; color: var(--sub); font-weight: 500; }
+  .metric { display: grid; grid-template-columns: 130px 1fr 150px; gap: 18px; align-items: center; margin-top: 16px; font-size: 28px; color: var(--sub); }
+  .metric .tr { height: 16px; border-radius: 8px; background: var(--track); overflow: hidden; }
+  .metric .tr i { display: block; height: 100%; border-radius: 8px; }
+  .metric b { font-family: var(--head); font-size: 30px; text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); }
+  .evt { left: 120px; top: 578px; width: 760px; display: flex; justify-content: center; }
+  .evt .pill { font-size: 28px; }
+  .chart { left: 940px; top: 268px; width: 860px; height: 610px; padding: 24px 28px; }
+  .chart .ct { font-size: 30px; font-weight: 700; display: flex; align-items: center; }
+  .chart .lg { margin-left: auto; display: flex; gap: 10px; font-size: 28px; font-weight: 500; color: var(--sub); }
+  .chart .lg span { padding: 2px 14px; border-radius: 999px; border: 1px solid var(--line); display: flex; gap: 8px; align-items: center; }
+  .chart .lg i { width: 18px; height: 3px; display: block; }
+  .pane { top: 270px; width: 820px; height: 540px; }
+  .pane .hd { display: flex; align-items: center; gap: 12px; padding: 18px 24px; border-bottom: 1px solid var(--line); font-size: 30px; font-weight: 700; }
+  .pane .hd .bd { margin-left: auto; font-size: 28px; padding: 2px 14px; border-radius: 999px; background: var(--track); color: var(--sub); }
+  .code { padding: 18px 0; font-size: 28px; }
+  .ln { display: grid; grid-template-columns: 58px 1fr; padding: 10px 24px 10px 0; border-left: 3px solid transparent; }
+  .ln > span:not(.note) { white-space: pre; }
+  .ln .no { color: var(--dim); text-align: right; padding-right: 18px; }
+  .ln .k { color: var(--c3); font-weight: 700; } .ln .o { color: var(--c1); font-weight: 700; } .ln .v { color: var(--ink); }
+  .ln .note { grid-column: 2; font-size: 28px; font-weight: 700; margin-top: 6px; color: var(--bad); }
+  .pass { position: absolute; left: 24px; right: 24px; bottom: 20px; padding: 12px 18px; border-radius: 12px; font-size: 28px; font-weight: 700;
+    color: var(--good); background: color-mix(in srgb, var(--good) 9%, transparent); border: 1px solid color-mix(in srgb, var(--good) 40%, transparent); }
+  .float { position: absolute; display: flex; align-items: center; gap: 10px; font-size: 28px; font-weight: 600; color: var(--sub); }
+  .float i { width: 18px; height: 18px; border-radius: 50%; display: block; }
+</style>
+<script src="kit.js"></script>
+<script>K.useStyle('nebula')</script>
+</head>
+<body>
+<div class="stage"></div>
+<canvas class="layer" id="bg"></canvas>
+
+<section class="scene" id="compare">
+  <div class="abs chap" data-noread><b>02</b><em></em>对比</div>
+  <div class="abs h center-x" data-split style="top:130px;font-size:64px">同一个输入，<span class="g warm">两种情形</span>。</div>
+  <div class="abs card per" style="top:268px" id="pa">
+    <div class="pt">情形 A · 现状<span>条件说明</span></div>
+    <div class="metric"><span>指标一</span><div class="tr"><i style="background:var(--c2)"></i></div><b data-v="42.0">0</b></div>
+    <div class="metric"><span>指标二</span><div class="tr"><i style="background:var(--c2)"></i></div><b data-v="35.5">0</b></div>
+    <div class="metric"><span>指标三</span><div class="tr"><i style="background:var(--c2)"></i></div><b data-v="18.0">0</b></div>
+  </div>
+  <div class="abs evt"><span class="pill">⚡ 发生的变化</span></div>
+  <div class="abs card per" style="top:650px" id="pb">
+    <div class="pt">情形 B · 变化之后<span>条件说明</span></div>
+    <div class="metric"><span>指标一</span><div class="tr"><i style="background:var(--bad)"></i></div><b data-v="37.5">0</b></div>
+    <div class="metric"><span>指标二</span><div class="tr"><i style="background:var(--bad)"></i></div><b data-v="29.0">0</b></div>
+    <div class="metric"><span>指标三</span><div class="tr"><i style="background:var(--c2)"></i></div><b data-v="18.0">0</b></div>
+  </div>
+  <div class="abs card chart">
+    <div class="ct">指标随参数变化<div class="lg"><span><i style="background:var(--c2)"></i>情形 A</span><span><i style="background:var(--bad)"></i>情形 B</span></div></div>
+    <svg id="curve" width="804" height="470" data-noread style="margin-top:14px;overflow:visible"></svg>
+  </div>
+  <div class="abs center-x cap" style="top:948px" data-split>一句话说出<span class="g warm">差别在哪</span>。</div>
+</section>
+
+<section class="scene" id="trace">
+  <div class="abs chap" data-noread><b>03</b><em></em>可追溯</div>
+  <div class="abs h center-x" data-split style="top:130px;font-size:64px">左边做决定，<span class="g warm">右边算结果</span>。</div>
+  <div class="abs card pane" style="left:120px">
+    <div class="hd"><i class="dot" style="background:var(--c2)"></i>助手<span class="bd">只做选择</span></div>
+    <div class="code mono" id="lp">
+      <div class="ln"><span class="no" data-noread>1</span><span><span class="k">add    </span><span class="v">对象 A</span></span></div>
+      <div class="ln"><span class="no" data-noread>2</span><span><span class="k">add    </span><span class="v">规则 B</span></span></div>
+      <div class="ln"><span class="no" data-noread>3</span><span><span class="k">link   </span><span class="v">A → B</span></span></div>
+      <div class="ln" id="bad"><span class="no" data-noread>4</span><span><span class="k">set    </span><span class="v">结果 = 99</span></span><span class="note">✕ 不接受：结果只能由计算得出</span></div>
+    </div>
+  </div>
+  <div class="abs card pane" style="left:980px">
+    <div class="hd"><i class="dot" style="background:var(--c4)"></i>计算链<span class="bd">版本锁定</span></div>
+    <div class="code mono" id="rp">
+      <div class="ln"><span class="no" data-noread>1</span><span><span class="o">step.one@1   </span><span class="v">输入 → 中间值</span></span></div>
+      <div class="ln"><span class="no" data-noread>2</span><span><span class="o">step.two@1   </span><span class="v">中间值 → 结果</span></span></div>
+      <div class="ln" id="warn"><span class="no" data-noread>3</span><span class="v" style="color:var(--warn);font-weight:700">⚠ 超出已知范围的部分 → 已标注</span></div>
+    </div>
+    <div class="pass">✓ 版本与参数已记录 — 再跑一次，结果一致</div>
+  </div>
+  <div class="abs center-x cap" style="top:880px" data-split>每个数字，都能<span class="g warm">追到来源</span>。</div>
+</section>
+
+<section class="scene" id="outro">
+  <div class="float" style="left:300px;top:250px"><i style="background:var(--c1)"></i>素材一</div>
+  <div class="float" style="left:820px;top:180px"><i style="background:var(--c3)"></i>素材二</div>
+  <div class="float" style="left:1400px;top:240px"><i style="background:var(--c4)"></i>素材三</div>
+  <div class="float" style="left:1580px;top:500px"><i style="background:var(--bad)"></i>素材四</div>
+  <div class="float" style="left:1380px;top:800px"><i style="background:var(--c6)"></i>素材五</div>
+  <div class="float" style="left:330px;top:780px"><i style="background:var(--c5)"></i>素材六</div>
+  <div class="abs h center-x" data-split style="top:420px;font-size:76px">你需要的，都已经在了。</div>
+  <div class="abs h center-x" data-split style="top:530px;font-size:96px">让它们<span class="g warm">一起工作</span>。</div>
+</section>
+
+<canvas class="layer" id="fx"></canvas>
+<div class="curtain" id="curtain"></div>
+
+<script>
+const { $, $$, clamp, out3, inout } = K;
+
+// Chart data: pass real series through timeline.data.series = { x:[], a:[], b:[], flag?:[x0,x1], marker? };
+// the fallback below is fictional and only shows the layout.
+const D = TIMELINE.data?.series ?? (() => {
+  const x = Array.from({ length: 90 }, (_, i) => 50 + i);
+  const f = (v, k) => .48 / (1 + Math.exp((v - k) / 18)) + .08;
+  return { x, a: x.map((v) => f(v, 95)), b: x.map((v) => f(v, 88)), flag: [50, 62], marker: 99 };
+})();
+(function chart() {
+  const svg = $('#curve'), W = 804, H = 400, PL = 64, PB = 40;
+  const xs = D.x, all = [...D.a, ...D.b];
+  const X0 = xs[0], X1 = xs.at(-1), Y0 = Math.floor(Math.min(...all) * 20) / 20, Y1 = Math.ceil(Math.max(...all) * 20) / 20;
+  const sx = (v) => PL + (v - X0) / (X1 - X0) * (W - PL - 10), sy = (v) => (H - PB) - (v - Y0) / (Y1 - Y0) * (H - PB - 10);
+  const path = (ys) => 'M' + xs.map((v, i) => `${sx(v).toFixed(1)} ${sy(ys[i]).toFixed(1)}`).join(' L');
+  const yt = []; for (let v = Y0; v <= Y1 + 1e-9; v += .05) yt.push(v);
+  svg.innerHTML = `
+    ${D.flag ? `<rect x="${sx(D.flag[0])}" y="0" width="${sx(D.flag[1]) - sx(D.flag[0])}" height="${H - PB}" style="fill:color-mix(in srgb, var(--warn) 9%, transparent)"/>
+      <text x="${(sx(D.flag[0]) + sx(D.flag[1])) / 2}" y="30" style="fill:var(--warn)" font-size="26" font-weight="700" text-anchor="middle">标注区间</text>` : ''}
+    ${yt.map((v) => `<line x1="${PL}" x2="${W - 10}" y1="${sy(v)}" y2="${sy(v)}" style="stroke:var(--line)"/><text x="${PL - 12}" y="${sy(v) + 5}" style="fill:var(--sub)" font-size="20" text-anchor="end">${Math.round(v * 100)}%</text>`).join('')}
+    ${D.marker !== undefined ? `<line class="now" x1="${sx(D.marker)}" x2="${sx(D.marker)}" y1="0" y2="${H - PB}" style="stroke:var(--ink)" stroke-dasharray="5 6" stroke-opacity=".6"/>` : ''}
+    <path class="c1" d="${path(D.a)}" fill="none" style="stroke:var(--c2)" stroke-width="3.5"/>
+    <path class="c2" d="${path(D.b)}" fill="none" style="stroke:var(--bad)" stroke-width="3.5"/>`;
+})();
+
+const RENDER = {
+  compare(l) {
+    K.text($('#compare [data-split]'), l, -1, { st: .045 });
+    K.item($('#compare .chap'), l, 0, { dy: 0 });
+    K.item($('#pa'), l, .35, { blur: 6 }); K.item($('#compare .evt'), l, 2.4, { dy: 14 }); K.item($('#pb'), l, 2.9, { blur: 6 });
+    const fill = (card, at) => $$('.metric', card).forEach((m, i) => {
+      const b = $('b', m), v = Number(b.dataset.v), k = out3((l - at - i * .18) / 1.1);
+      $('.tr i', m).style.width = `${v / 50 * 100 * k}%`;
+      b.textContent = `${(v * k).toFixed(1)}%`;
+    });
+    fill($('#pa'), .7); fill($('#pb'), 3.3);
+    K.item($('#compare .chart'), l, .6, { blur: 6 });
+    K.stroke($('#curve .c1'), inout((l - 1.1) / 1.6)); K.stroke($('#curve .c2'), inout((l - 3.5) / 1.6));
+    const now = $('#curve .now'); if (now) now.style.opacity = clamp((l - 1.8) / .4);
+    K.text($('#compare .cap'), l, 5.6, { st: .035 });
+  },
+  trace(l) {
+    K.text($('#trace [data-split]'), l, .05, { st: .05 });
+    K.item($('#trace .chap'), l, 0, { dy: 0 });
+    $$('#trace .pane').forEach((p, i) => K.item(p, l, .4 + i * .15, { blur: 6 }));
+    $$('#lp .ln').forEach((ln, i) => K.item(ln, l, 1 + i * .45, { d: .35, dy: 6 }));
+    $$('#rp .ln').forEach((ln, i) => K.item(ln, l, 1.3 + i * .42, { d: .35, dy: 6 }));
+    const tint = (el, v, k) => { el.style.background = k ? `color-mix(in srgb, var(${v}) ${(13 * k).toFixed(1)}%, transparent)` : ''; el.style.borderLeftColor = k ? `var(${v})` : 'transparent'; };
+    const bk = clamp((l - 3) / .3), bad = $('#bad');
+    tint(bad, '--bad', bk); $('.note', bad).style.opacity = bk; $('.v', bad).style.textDecoration = bk ? 'line-through' : 'none';
+    tint($('#warn'), '--warn', clamp((l - 3.4) / .3));
+    K.item($('#trace .pass'), l, 4, { dy: 12 });
+    K.text($('#trace .cap'), l, 4.6, { st: .035 });
+  },
+  outro(l, s) {
+    const conv = inout((l - (s.dur - 1.3)) / 1.1);
+    $$('#outro .float').forEach((f, i) => {
+      const p = out3((l - .1 - i * .12) / .7), x = parseFloat(f.style.left), y = parseFloat(f.style.top);
+      f.style.opacity = p * (1 - conv);
+      f.style.filter = `blur(${(1 - p) * 8 + conv * 6}px)`;
+      f.style.transform = `translate(${(900 - x) * conv}px, ${(455 - y) * conv}px)`;
+    });
+    const [a, b] = $$('#outro [data-split]');
+    K.text(a, l, .2, { st: .04, outAt: s.dur - 1.2 }); K.text(b, l, 1, { st: .05, outAt: s.dur - 1.2 });
+  },
+};
+K.film(RENDER, {
+  fadeOut: .4, curtain: $('#curtain'),
+  after(t) {
+    const o = K.scene('outro');
+    if (o) K.hit(t, o.start + o.dur - .15, 960, 455);
+  },
+});
+</script>
+</body>
+</html>

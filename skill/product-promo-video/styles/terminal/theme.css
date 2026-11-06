@@ -1,0 +1,46 @@
+/* terminal 终端荧光: phosphor green on black glass, everything monospaced, scanlines and a soft glow. */
+:root {
+  --bg: #030805; --ink: #c6ffd8; --sub: #74d69a; --dim: #3f7d58; --line: rgba(57, 255, 136, .28);
+  --card: rgba(57, 255, 136, .035); --card-line: rgba(57, 255, 136, .45); --card-shadow: 0 0 24px rgba(57, 255, 136, .08) inset;
+  --radius: 4px; --track: rgba(57, 255, 136, .1); --knob: rgba(57, 255, 136, .5);
+  --accent: #39ff88; --accent-ink: #021208; --good: #39ff88; --warn: #ffcc66; --bad: #ff6159;
+  --c1: #39ff88; --c2: #7dffb0; --c3: #a8ffc9; --c4: #ffcc66; --c5: #5fe0a0; --c6: #d8ffe6;
+  --warm: linear-gradient(90deg, var(--accent), var(--accent)); --cool: linear-gradient(90deg, #d8ffe6, #d8ffe6);
+  --font: "Cascadia Mono", "SF Mono", Consolas, "Menlo", "Microsoft YaHei UI", "PingFang SC", monospace;
+  --mono: var(--font); --head-weight: 700; --head-track: 0;
+}
+body { text-shadow: 0 0 10px rgba(57, 255, 136, .35); }
+body::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 50;
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, .28) 0 1px, transparent 1px 3px), radial-gradient(ellipse at 50% 50%, transparent 58%, rgba(0, 0, 0, .55) 100%); }
+.stage { background: radial-gradient(ellipse at 50% 45%, #07170d 0%, #030805 75%); }
+.bar3 { font-family: var(--mono); border-bottom: 1px solid var(--line); }
+.bar3 i { border-radius: 0; background: transparent; border: 1px solid var(--knob); width: 12px; height: 12px; }
+.bar3 .t { color: var(--sub); }
+.chap { color: var(--dim); letter-spacing: .18em; font-weight: 500; }
+.chap b { background: none; color: var(--accent); -webkit-text-fill-color: var(--accent); }
+.chap em { background: var(--dim); }
+.ctitle .num { -webkit-text-stroke: 0; color: var(--accent); font-weight: 700; font-size: 200px; }
+.ctitle .num::before { content: "> "; color: var(--dim); }
+.ctitle .ts { color: var(--dim); }
+.c.g { text-shadow: none; }
+.hub .orb { border-radius: 4px; background: transparent; border: 1px solid var(--accent); box-shadow: 0 0 30px rgba(57, 255, 136, .35), inset 0 0 20px rgba(57, 255, 136, .25); }
+.hub .ringline { stroke: var(--accent); stroke-opacity: .5; stroke-dasharray: 2 6; }
+.mk-glow { display: none; }
+.mk-body { fill: none; stroke: var(--accent); stroke-width: 4px; rx: 6; }
+.mk-line { stroke: var(--accent); }
+.mk-dot { fill: var(--accent); }
+.pill { border-radius: 0; color: var(--warn); background: transparent; border: 1px solid var(--warn); }
+.pill::before { content: "[!] "; white-space: pre; }
+.btn { border-radius: 0; text-shadow: none; }
+.btn::before { content: "$ "; }
+.dot { border-radius: 0; }
+.agent .pg, .agent .pg i { border-radius: 0 !important; }
+.caret { width: .6em; background: var(--accent); }
+.sub { background: rgba(2, 10, 5, .9); border: 1px solid var(--line); border-radius: 0; font-family: var(--mono); }
+.sub::before { content: "> "; color: var(--dim); }
+.curtain { background: #000; }
+.gradtext { background: none; color: var(--accent); -webkit-text-fill-color: var(--accent); }
+/* Real recordings keep their own colours (status colours and charts are evidence): the style frames them, never tints them. */
+.shot { outline: 1px solid var(--accent); outline-offset: 6px; box-shadow: 0 0 0 1px rgba(0, 0, 0, .6), 0 0 48px color-mix(in srgb, var(--accent) 22%, transparent); }
+.ghost { border-radius: 0; border: 1px solid var(--accent); background: transparent; }
+.ghost::before { content: "$ "; color: var(--dim); }

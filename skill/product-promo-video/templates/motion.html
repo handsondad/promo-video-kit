@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Motion promo</title>
+<link rel="stylesheet" href="kit.css">
+<style>
+  /* Layout only; colours come from the style's variables (kit.css lists them). */
+  #hook .l1 { top: 400px; font-size: 80px; }
+  #hook .w { top: 510px; font-size: 104px; }
+  .mini { position: absolute; width: 460px; }
+  .mini .body { padding: 20px 22px; font-size: 28px; color: var(--sub); line-height: 1.6; }
+  #ask .win { left: 130px; top: 250px; width: 1010px; height: 560px; }
+  #ask .body { padding: 44px 46px; font-size: 32px; line-height: 1.7; }
+  #ask .prompt { color: var(--accent); margin-right: 14px; }
+  #ask .typed { white-space: pre-wrap; }
+  #ask .st { margin-top: 26px; font-size: 30px; color: var(--sub); display: flex; gap: 14px; }
+  #ask .st b { color: var(--good); width: 28px; }
+  #ask .rt { left: 1230px; top: 400px; font-size: 64px; }
+  #ask .rt > div { margin-bottom: 14px; }
+  .hubl { position: absolute; width: 300px; margin-left: -150px; text-align: center; font-size: 30px; font-weight: 700; }
+  .hubl small { display: block; font-size: 28px; color: var(--sub); font-weight: 600; margin-top: 4px; }
+  .req { left: 120px; top: 300px; width: 570px; padding: 26px 28px; }
+  .req .q { font-size: 34px; font-weight: 700; margin-bottom: 14px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+  .task { display: grid; grid-template-columns: 1fr 34px; align-items: center; padding: 12px 0; font-size: 28px; font-weight: 600; }
+  .task small { font-size: inherit; color: var(--sub); font-weight: 500; margin-left: 12px; }
+  .ck { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--knob); display: grid; place-items: center; font-size: 17px; color: var(--bg); font-weight: 800; }
+  .agent { left: 1220px; width: 580px; padding: 20px 24px 18px; }
+  .agent .hd { display: flex; align-items: center; gap: 12px; font-size: 30px; font-weight: 700; }
+  .agent .row { display: flex; justify-content: space-between; margin-top: 12px; font-size: 28px; color: var(--sub); }
+  .agent .pg { height: 4px; border-radius: 4px; background: var(--track); margin-top: 16px; overflow: hidden; }
+  .agent .pg i { display: block; height: 100%; border-radius: 4px; }
+  .tagline { top: 600px; font-size: 42px; color: var(--sub); }
+  #end .cta { top: 720px; }
+  #end .disc { bottom: 74px; font-size: 28px; color: var(--sub); }
+</style>
+<script src="kit.js"></script>
+<script>K.useStyle('nebula')</script>
+</head>
+<body>
+<!-- Shared SVG defs live outside every scene: a gradient inside a display:none scene cannot be referenced from another one. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="mk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--c2)"/><stop offset=".55" style="stop-color:var(--c1)"/><stop offset="1" style="stop-color:var(--c3)"/></linearGradient>
+  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5"/></filter>
+  <symbol id="mark" viewBox="0 0 100 100"><rect class="mk-glow" x="6" y="6" width="88" height="88" rx="26" fill="url(#mk)" opacity=".55" filter="url(#glow)"/><rect class="mk-body" x="6" y="6" width="88" height="88" rx="26" fill="url(#mk)"/>
+    <path class="mk-line" d="M24 66 L40 47 L55 57 L76 31" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><circle class="mk-dot" cx="76" cy="31" r="7.5" fill="#fff"/></symbol>
+</defs></svg>
+<div class="stage"></div>
+<canvas class="layer" id="bg"></canvas>
+
+<!-- Beat 1: "you already have X / Y / Z" → "but none of them does <the job>" (pain, in the viewer's words) -->
+<section class="scene" id="hook">
+  <div class="mini card" style="left:130px;top:120px"><div class="bar3" data-noread><i></i><i></i><i></i><span class="t">现有工具 A</span></div><div class="body">它能做的事……</div></div>
+  <div class="mini card" style="right:150px;bottom:150px"><div class="bar3" data-noread><i></i><i></i><i></i><span class="t">现有工具 B</span></div><div class="body">它能做的事……</div></div>
+  <div class="mini card" style="right:160px;top:130px"><div class="bar3" data-noread><i></i><i></i><i></i><span class="t">现有工具 C</span></div><div class="body">它缺的那块……</div></div>
+  <div class="abs h center-x l1" data-split>你已经有了</div>
+  <div class="abs h center-x w" data-split style="color:var(--c5)">工具 A</div>
+  <div class="abs h center-x w" data-split style="color:var(--c6)">工具 B</div>
+  <div class="abs h center-x w" data-split><span class="g warm">工具 C</span></div>
+  <div class="abs h center-x l1" data-split>工具都不缺。</div>
+  <div class="abs h center-x w" data-split style="font-size:92px">缺一个能<span class="g warm">把事办成</span>的地方。</div>
+</section>
+
+<!-- Beat 2: the signature moment lands the lockup (impact at scene time = scene.impact) -->
+<section class="scene" id="logo">
+  <div class="abs lock"><svg viewBox="0 0 100 100"><use href="#mark" width="100" height="100"/></svg><div class="name h" data-split>Your<span class="g cool">Product</span></div></div>
+  <div class="abs center-x tagline" data-split>一句话定位，<span style="color:var(--dim)">它为谁解决什么。</span></div>
+</section>
+
+<!-- Beat 3: the one action the user takes, typed; benefits stack on the right -->
+<section class="scene" id="ask">
+  <div class="abs card win">
+    <div class="bar3" data-noread><i></i><i></i><i></i><span class="t">YourProduct</span></div>
+    <div class="body">
+      <div><span class="prompt" data-noread>›</span><span class="typed"></span></div>
+      <div class="st"><b>✓</b>第一步发生了什么</div>
+      <div class="st"><b>✓</b>第二步发生了什么</div>
+    </div>
+  </div>
+  <div class="abs h rt">
+    <div data-split>不用 X。</div>
+    <div data-split>不用 Y。</div>
+    <div data-split><span class="g warm">一句话</span>就够。</div>
+  </div>
+</section>
+
+<!-- Beat 4: numbered chapter = title card (1.4 s) + content: input card → hub → parallel progress cards → caption -->
+<section class="scene" id="ch1">
+  <div class="abs ctitle"><div class="num">01</div><div><div class="tt h" data-split>第一个卖点</div><div class="ts" data-split>一句副标题</div></div></div>
+  <div class="content">
+    <div class="abs chap" data-noread><b>01</b><em></em>第一个卖点</div>
+    <svg class="links" id="c1links"></svg>
+    <div class="abs card req">
+      <div class="q">用户的请求</div>
+      <div class="task"><div>子任务一<small>由谁完成</small></div><div class="ck" data-noread></div></div>
+      <div class="task"><div>子任务二<small>由谁完成</small></div><div class="ck" data-noread></div></div>
+      <div class="task"><div>子任务三<small>由谁完成</small></div><div class="ck" data-noread></div></div>
+    </div>
+    <div class="hub" style="left:960px;top:540px"><div class="orb"></div><svg viewBox="0 0 150 150"><circle class="ringline" cx="75" cy="75" r="68" fill="none" stroke-width="2"/><g class="ring"></g></svg></div>
+    <div class="hubl" style="left:960px;top:630px">核心引擎<small>+ 你的产品</small></div>
+    <div class="abs card agent" style="top:250px"><div class="hd"><i class="dot" style="background:var(--c1)"></i>能力一</div><div class="row"><span class="lab">处理中</span><span class="pc">0%</span></div><div class="pg"><i style="background:var(--cool)"></i></div></div>
+    <div class="abs card agent" style="top:470px"><div class="hd"><i class="dot" style="background:var(--c5)"></i>能力二</div><div class="row"><span class="lab">处理中</span><span class="pc">0%</span></div><div class="pg"><i style="background:var(--c5)"></i></div></div>
+    <div class="abs card agent" style="top:690px"><div class="hd"><i class="dot" style="background:var(--c4)"></i>能力三</div><div class="row"><span class="lab">处理中</span><span class="pc">0%</span></div><div class="pg"><i style="background:var(--warm)"></i></div></div>
+    <div class="abs center-x cap" data-split>一句话总结这一章的<span class="g warm">结果</span>。</div>
+  </div>
+</section>
+
+<!-- Beat 5: the signature moment again, one call to action, disclaimers -->
+<section class="scene" id="end">
+  <div class="abs lock"><svg viewBox="0 0 100 100"><use href="#mark" width="100" height="100"/></svg><div class="name h" data-split>Your<span class="g cool">Product</span></div></div>
+  <div class="abs center-x tagline" data-split>一句收尾的口号</div>
+  <div class="abs center-x cta"><span class="ghost">唯一的行动号召 → 去哪里开始</span></div>
+  <div class="abs center-x disc">必要的免责声明 / 数据说明</div>
+</section>
+
+<canvas class="layer" id="fx"></canvas>
+<div class="foot" id="foot">贯穿内容章节的小字说明（可删）</div>
+<div class="curtain" id="curtain"></div>
+
+<script>
+const { $, $$, clamp, type } = K;
+const orbits = $$('.hub .ring').map((g) => K.orbit(g));
+K.links($('#c1links'), [
+  { d: 'M690 540 L885 540', c: 'var(--c3)', at: .5, speed: .9 },
+  { d: 'M1035 540 C1130 540 1120 330 1220 330', c: 'var(--c1)', at: .9 },
+  { d: 'M1035 540 C1130 540 1120 550 1220 550', c: 'var(--c5)', at: 1.05 },
+  { d: 'M1035 540 C1130 540 1120 770 1220 770', c: 'var(--c4)', at: 1.2 },
+]);
+
+// Chapter title card for 2.3 s, then the content; returns content-local time (negative while the card shows).
+function chapter(root, l) {
+  const card = $('.ctitle', root);
+  K.item($('.num', card), l, 0, { d: .6, dy: 0, blur: 12, outAt: 2.15, outD: .35 });
+  const [tt, ts] = $$('[data-split]', card);
+  K.text(tt, l, 0, { st: .04, outAt: 2.15 }); K.text(ts, l, .2, { st: .02, outAt: 2.15 });
+  card.style.display = l < 2.52 ? 'flex' : 'none';
+  $('.content', root).style.display = l > 2.3 ? 'block' : 'none';
+  return l - 2.3;
+}
+function lockup(root, l, s, hit) {
+  const lock = $('.lock', root);
+  lock.style.opacity = clamp((l - hit + .05) / .25) * (1 - clamp((l - (s.dur - .25)) / .25) * (root.id === 'end' ? 0 : 1));
+  K.lockup(lock, l, hit);
+  K.text($('.tagline', root), l, hit + .6, { st: .04 });
+}
+
+const RENDER = {
+  hook(l, s) {
+    const [l1, w1, w2, w3, n1, n2] = $$('#hook [data-split]');
+    K.text(l1, l, -.9, { st: .05, outAt: 4.75 });
+    K.text(w1, l, .35, { outAt: 1.55, outD: .3 }); K.text(w2, l, 1.85, { outAt: 3.15, outD: .3 }); K.text(w3, l, 3.45, { outAt: 4.75, outD: .3 });
+    K.text(n1, l, 5.05, { st: .05, outAt: s.dur - .15 }); K.text(n2, l, 5.25, { st: .045, outAt: s.dur - .15 });
+    $$('#hook .mini').forEach((c, i) => {
+      K.item(c, l, .35 + i * 1.6, { d: .8, dy: 40, blur: 10, outAt: s.dur - .9, outD: .7 });
+      c.style.opacity = Number(c.style.opacity) * (1 - .55 * clamp((l - 5) / .6));
+    });
+  },
+  logo(l, s) { lockup($('#logo'), l, s, s.impact); },
+  ask(l, s) {
+    K.item($('#ask .win'), l, 0, { d: .8, dy: 40, outAt: s.dur - .2 });
+    type($('#ask .typed'), '用户会说的那一句话，\n就是产品要接住的需求。', l, .6, 2.6);
+    $$('#ask .st').forEach((e, i) => K.item(e, l, 3.8 + i * .55, { d: .45, dy: 12 }));
+    $$('#ask .rt [data-split]').forEach((e, i) => K.text(e, l, 1 + i * 1.15, { st: .055, outAt: s.dur - .2 }));
+  },
+  ch1(l, s) {
+    const root = $('#ch1'), c = chapter(root, l);
+    if (c < 0) return;
+    K.item($('.chap', root), c, 0, { dy: 0 });
+    K.item($('.req', root), c, .1, { d: .7, dy: 40, blur: 6 });
+    K.item($('.hub', root), c, .3, { d: .6, dy: 0, scale: .3 });
+    K.item($('.hubl', root), c, .4, { d: .5, dy: 10 });
+    K.drawLinks($('#c1links'), c);
+    const done = [3.2, 4.4, 5.4];
+    $$('.agent', root).forEach((a, i) => {
+      K.item(a, c, .9 + i * .15, { d: .6, dy: 30, blur: 6 });
+      const k = clamp((c - 1.2 - i * .15) / (done[i] - 1.2 - i * .15)), pct = Math.round(100 * (1 - Math.pow(1 - k, 1.6)));
+      $('.pc', a).textContent = k >= 1 ? '✓ 100%' : `${pct}%`; $('.pc', a).style.color = k >= 1 ? 'var(--good)' : '';
+      $('.pg i', a).style.width = `${pct}%`; a.style.borderColor = k >= 1 ? 'color-mix(in srgb, var(--good) 45%, transparent)' : '';
+      $('.lab', a).textContent = k >= 1 ? '完成' : '处理中';
+    });
+    $$('.ck', root).forEach((ck, i) => { const on = c > done[i]; ck.style.background = on ? 'var(--good)' : ''; ck.style.borderColor = on ? 'var(--good)' : ''; ck.textContent = on ? '✓' : ''; });
+    K.text($('.cap', root), c, 1.8, { st: .03 });
+    $('.content', root).style.opacity = 1 - clamp((l - (s.dur - .3)) / .3);
+  },
+  end(l, s) {
+    lockup($('#end'), l, s, s.impact);
+    K.item($('#end .cta'), l, s.impact + 1.8, { d: .6, dy: 16 });
+    K.item($('#end .disc'), l, s.impact + 2.2, { d: .6, dy: 0 });
+  },
+};
+
+K.film(RENDER, {
+  curtain: $('#curtain'),
+  after(t) {
+    orbits.forEach((o) => o(t));
+    for (const s of TIMELINE.scenes) if (s.impact !== undefined) K.hit(t, s.start + s.impact, 960, 455);
+    const ch = K.scene('ch1');
+    $('#foot').style.opacity = ch && t >= ch.start + 2.3 && t < ch.start + ch.dur ? .95 : 0;
+  },
+});
+</script>
+</body>
+</html>

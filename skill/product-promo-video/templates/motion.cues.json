@@ -1,0 +1,11 @@
+{
+  "palette": "synth",
+  "grid": "logo+0.5",
+  "ticks": [0.35, 1.85, 3.45, 5.05],
+  "impacts": ["logo+0.5", "end+0.5"],
+  "whooshes": ["ask", "ch1"],
+  "groove": ["ask", "end-0.4"],
+  "hats": ["ch1", "end-0.4"],
+  "arp": ["ask+2", "end"],
+  "breath": ["end-0.6", "end+0.5"]
+}

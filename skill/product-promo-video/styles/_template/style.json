@@ -1,0 +1,11 @@
+{
+  "slug": "__slug__",
+  "cn": "__name__",
+  "en": "",
+  "category": "",
+  "tone": "dark",
+  "line": "一句话：这是什么媒介，画面上做什么。",
+  "fits": ["适合的内容一", "适合的内容二"],
+  "sound": "synth",
+  "cuts": ["motion", "narrated"]
+}

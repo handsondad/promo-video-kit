@@ -1,0 +1,11 @@
+{
+  "slug": "swiss",
+  "cn": "瑞士网格",
+  "en": "Swiss Grid",
+  "category": "图形与排版",
+  "tone": "light",
+  "line": "浅灰纸面、黑字、一个信号红；12 栏网格左对齐，元素卡拍落位，擦入与刀切，绝不弹跳。",
+  "fits": ["品牌与设计类产品", "功能清单、步骤说明", "B2B 理性陈述、年度报告式短片"],
+  "sound": "motorik",
+  "cuts": ["motion", "narrated"]
+}

@@ -1,0 +1,11 @@
+{
+  "slug": "terminal",
+  "cn": "终端荧光",
+  "en": "Phosphor Terminal",
+  "category": "开发者",
+  "tone": "dark",
+  "line": "黑色玻璃上的荧光绿等宽字，扫描线与辉光；文字按固定速度打出，面板像 CRT 一样闪亮、收成一条线熄灭。",
+  "fits": ["CLI / SDK / API 产品", "开发者大会、黑客松", "自动化、运维、安全类工具"],
+  "sound": "chip",
+  "cuts": ["motion", "narrated"]
+}

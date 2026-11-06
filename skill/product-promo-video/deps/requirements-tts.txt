@@ -1,0 +1,3 @@
+# Neural narration for the narrated cut. It calls an online speech service at synthesis time, so it still needs a
+# network connection after an offline install, and the narration text leaves the machine.
+edge-tts==7.3.1

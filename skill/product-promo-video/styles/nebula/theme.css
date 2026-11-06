@@ -1,0 +1,4 @@
+/* nebula 星云玻璃: the kit defaults are this style; only the stage extras live here. */
+[data-style="nebula"] .stage::after { content: ""; position: absolute; inset: 0; background:
+  linear-gradient(rgba(148,170,220,.035) 1px, transparent 1px) 0 0 / 56px 56px,
+  linear-gradient(90deg, rgba(148,170,220,.035) 1px, transparent 1px) 0 0 / 56px 56px; }

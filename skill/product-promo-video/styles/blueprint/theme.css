@@ -1,0 +1,44 @@
+/* blueprint 蓝图工程: blueprint paper, white line work, construction lines, one yellow pencil for annotations. */
+:root {
+  --bg: #0c3a70; --ink: #eef5ff; --sub: #b4cdee; --dim: #7fa2d0; --line: rgba(238, 245, 255, .32);
+  --card: rgba(238, 245, 255, .035); --card-line: rgba(238, 245, 255, .78); --card-shadow: none; --radius: 0px;
+  --track: rgba(238, 245, 255, .12); --knob: rgba(238, 245, 255, .6);
+  --accent: #ffd166; --accent-ink: #0c3a70; --good: #b8f0d2; --warn: #ffd166; --bad: #ff8f80;
+  --c1: #eef5ff; --c2: #9fd3ff; --c3: #ffd166; --c4: #ff8f80; --c5: #b8f0d2; --c6: #cdbfff;
+  --warm: linear-gradient(90deg, var(--accent), var(--accent)); --cool: linear-gradient(90deg, #ffffff, #9fd3ff);
+  --font: "Bahnschrift", "DIN Alternate", "Roboto Condensed", "Arial Narrow", "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+  --mono: "Cascadia Mono", "SF Mono", Consolas, "Microsoft YaHei", monospace;
+  --head-weight: 600; --head-track: .01em;
+}
+.stage { background:
+  radial-gradient(ellipse at 50% 45%, transparent 50%, rgba(3, 20, 45, .5) 100%),
+  linear-gradient(rgba(238,245,255,.13) 1px, transparent 1px) 0 0 / 120px 120px,
+  linear-gradient(90deg, rgba(238,245,255,.13) 1px, transparent 1px) 0 0 / 120px 120px,
+  linear-gradient(rgba(238,245,255,.055) 1px, transparent 1px) 0 0 / 24px 24px,
+  linear-gradient(90deg, rgba(238,245,255,.055) 1px, transparent 1px) 0 0 / 24px 24px, var(--bg); }
+.card { border-width: 1.5px; outline: 1px dashed rgba(238, 245, 255, .28); outline-offset: 9px; }
+.bar3 { border-bottom: 1.5px solid var(--card-line); font-family: var(--mono); }
+.bar3 i { border-radius: 0; background: transparent; border: 1.5px solid var(--knob); width: 11px; height: 11px; }
+.bar3 .t { color: var(--ink); letter-spacing: .08em; }
+.chap { font-family: var(--mono); color: var(--sub); letter-spacing: .3em; font-weight: 500; }
+.chap b { background: none; color: var(--accent); -webkit-text-fill-color: var(--accent); }
+.chap em { background: var(--sub); }
+.ctitle .num { -webkit-text-stroke: 2px var(--ink); color: transparent; font-weight: 600; }
+.ctitle .ts { font-family: var(--mono); color: var(--accent); font-size: 28px; letter-spacing: .1em; }
+.cap { font-weight: 500; }
+.hub .orb { border-radius: 50%; background: transparent; box-shadow: none; border: 1.5px solid var(--ink); }
+.hub .orb::after { content: ""; position: absolute; inset: 24px; border-radius: 50%; border: 1px dashed var(--accent); }
+.hub .ringline { stroke: var(--ink); stroke-opacity: .6; stroke-dasharray: 6 6; }
+.mk-glow { display: none; }
+.mk-body { fill: none; stroke: var(--ink); stroke-width: 2.5px; }
+.mk-line { stroke: var(--accent); }
+.mk-dot { fill: var(--accent); }
+.pill { border-radius: 0; color: var(--accent); background: transparent; border: 1.5px dashed var(--accent); font-family: var(--mono); }
+.btn { border-radius: 0; background: transparent; color: var(--ink); border: 1.5px solid var(--ink); outline: 1px dashed var(--accent); outline-offset: 7px; }
+.dot { border-radius: 0; }
+.agent .pg { border-radius: 0; border: 1px solid var(--line); background: transparent; }
+.sub { background: rgba(8, 40, 80, .82); border: 1.5px solid var(--line); border-radius: 0; font-family: var(--font); }
+.foot { font-family: var(--mono); }
+.curtain { background: #06244a; }
+.gradtext { background: none; color: var(--ink); -webkit-text-fill-color: var(--ink); }
+.ghost { border-radius: 0; border: 1.5px dashed var(--accent); background: transparent; font-family: var(--mono); }

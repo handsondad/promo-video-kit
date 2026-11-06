@@ -1,0 +1,11 @@
+{
+  "slug": "editorial",
+  "cn": "杂志纸本",
+  "en": "Editorial Paper",
+  "category": "品牌与叙事",
+  "tone": "light",
+  "line": "暖色道林纸、衬线大标题、发丝分隔线和一个陶土红；动作从容，像翻开一本杂志的专题页。",
+  "fits": ["品牌故事、客户案例", "行业洞察、研究报告解读", "面向管理层的方案介绍"],
+  "sound": "felt",
+  "cuts": ["narrated", "motion"]
+}

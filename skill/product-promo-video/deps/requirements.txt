@@ -1,0 +1,2 @@
+# A full ffmpeg build (libx264 + aac) shipped as a wheel. Direct dependencies are pinned; pip resolves the rest.
+imageio-ffmpeg==0.8.1

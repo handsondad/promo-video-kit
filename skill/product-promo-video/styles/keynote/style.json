@@ -1,0 +1,11 @@
+{
+  "slug": "keynote",
+  "cn": "暗场发布会",
+  "en": "Dark Keynote",
+  "category": "科技发布",
+  "tone": "dark",
+  "line": "近黑舞台、发丝网格、唯一一个发光强调色；界面卡准网格和节拍落位，光带扫过才点亮。",
+  "fits": ["软件版本发布", "单一核心功能的发布", "大数字、关键指标的强调"],
+  "sound": "mallet",
+  "cuts": ["motion", "narrated"]
+}

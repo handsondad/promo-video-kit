@@ -1,0 +1,9 @@
+{
+  "fps": 30,
+  "scenes": [
+    { "id": "compare", "dur": 9.0 },
+    { "id": "trace", "dur": 8.0 },
+    { "id": "outro", "dur": 4.6 }
+  ],
+  "data": {}
+}
