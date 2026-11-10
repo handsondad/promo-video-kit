@@ -3,7 +3,7 @@ import { createRequire } from 'node:module';
 import { existsSync, readFileSync, readdirSync, unlinkSync, writeFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { homedir } from 'node:os';
-import { dirname, join, resolve } from 'node:path';
+import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const WIN = process.platform === 'win32';
@@ -28,6 +28,16 @@ export function arg(name, fallback) {
 
 // Windows editors and PowerShell 5 may save JSON with a byte-order mark.
 export const readJson = (p) => JSON.parse(readFileSync(p, 'utf8').replace(/^\uFEFF/, ''));
+
+// The skills shipped together with this one: every skills/<name>/ with a SKILL.md when this copy sits in the kit (the
+// repo, whose package.json is promo-video-kit, or an offline bundle with bundle.json); otherwise just this skill.
+export function kitSkills() {
+  const parent = dirname(SKILL), root = dirname(parent);
+  let kit = existsSync(join(root, 'bundle.json'));
+  try { kit ||= readJson(join(root, 'package.json')).name === 'promo-video-kit'; } catch { /* not the repo */ }
+  if (!kit || basename(parent) !== 'skills') return [SKILL];
+  return readdirSync(parent).map((d) => join(parent, d)).filter((d) => existsSync(join(d, 'SKILL.md')));
+}
 
 // The playwright-core version setup.mjs installs, and the one in the tools dir (null when absent).
 export const PINNED = readJson(join(SKILL, 'deps', 'package.json')).dependencies['playwright-core'];

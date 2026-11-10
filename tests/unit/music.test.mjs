@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { test } from 'node:test';
-import { PALETTES, resolveCues, writeScore } from '../../skill/product-promo-video/scripts/music.mjs';
+import { PALETTES, resolveCues, writeScore } from '../../skills/product-promo-video/scripts/music.mjs';
 import { SKILL, scratch } from '../helpers.mjs';
 
 const timeline = { fps: 30, scenes: [{ id: 'hook', dur: 2 }, { id: 'logo', dur: 1.5 }, { id: 'end', dur: 1 }] };

@@ -28,6 +28,7 @@ else {
   const mean = (af) => +(/mean_volume:\s*(-?[\d.]+) dB/.exec(run(ff, ['-hide_banner', '-i', file, '-vn', '-af', `${af}volumedetect`, '-f', 'null', '-']).stderr)?.[1] ?? NaN);
   const low = mean('lowpass=f=150,lowpass=f=150,') - mean('');
   loud = `${I} LUFS, true peak ${peak} dBTP, below 150 Hz ${low.toFixed(1)} dB of the whole`;
+  if ([I, peak, low].some(Number.isNaN)) problems.push('could not measure the audio (loudness, true peak or low end); check the audio stream with ffmpeg');
   if (I < -18 || I > -12) problems.push(`loudness ${I} LUFS (aim for -16…-14 for web and social)`);
   if (peak > -1) problems.push(`true peak ${peak} dBTP: keep it at -1 or lower, or players and re-encoders clip it`);
   if (low > -2) problems.push(`most of the energy sits below 150 Hz (${low.toFixed(1)} dB): phone speakers lose it; lift the mids or thin the bass`);

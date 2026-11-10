@@ -74,6 +74,7 @@ for (const s of scenes) console.log(`  ${s.id.padEnd(10)} ${s.start.toFixed(1).p
 for (const w of warnings) console.warn(`warning: ${w}`);
 
 const voiced = script.scenes.map((s, i) => ({ s, t: scenes[i] })).filter(({ s }) => s.file);
+if (!voiced.length) throw new Error(`${file}: no scene has narration ("vo"); a film without a voice is the motion cut (init.mjs --cut motion)`);
 const inputs = voiced.flatMap(({ s }) => ['-i', s.file]);
 const delays = voiced.map(({ t }, i) => `[${i}:a]adelay=${Math.round(t.vo.start * 1000)}:all=1[a${i}]`).join(';');
 const mix = `${delays};${voiced.map((_, i) => `[a${i}]`).join('')}amix=inputs=${voiced.length}:normalize=0,apad,atrim=0:${total.toFixed(3)},volume=${volume}[out]`;

@@ -1,8 +1,32 @@
 # 更新记录
 
-版本号同时写在 `package.json` 和 `skill/product-promo-video/VERSION`，测试会检查两者一致、这里有对应的一节。
+版本号同时写在 `package.json` 和每个 `skills/<skill>/VERSION`（三个 skill 同一个版本），测试会检查它们一致、这里有对应的一节。
 改了模板、风格、检查阈值或工具版本都要升版本：只修错升第三位，加功能或改阈值升第二位，改了片子目录或页面约定、
 旧片子要改才能用时升第一位。
+
+## 1.2.0 — 2026-11-10
+
+- 仓库改成多 skill：`skill/product-promo-video/` 移到 `skills/product-promo-video/`，新加 `demo-screen-recording`（浏览器操作录屏）
+  和 `html-briefing-deck`（HTML 汇报幻灯片）。以前用 `install --link` 的机器要重新 link 一次（旧链接指向已经不存在的 `skill/`）。
+- `install.mjs` 在仓库或离线包里运行时装 `skills/` 下的全部 skill，`--skill <名字>,…` 只装其中几个，`--list` 逐个列出；
+  在已装好的副本里运行时只装它自己。不拷 `node_modules`。`setup.mjs --pack` 把全部 skill 放进离线包。
+- `promo record`、`promo deck` 两个命令分别调录屏和幻灯片检查。
+- 录屏：
+  - 浏览器起不来时不再留下空的截图目录和临时目录（以前下一次运行会被"拒绝覆盖"挡住）。
+  - 支持 `storageState`（相对流程文件）、`locale`、`waitUntil`、`contextOptions`；页面加载默认等 `load`，不再等 `networkidle`
+    （有流式连接或轮询的聊天、agent 应用永远等不到）。`timeoutMin` 在步骤之间也检查。
+  - 流程 JSON 在启动浏览器之前校验：每步恰好一个动作、`agent` 必须有 `approve` 和 `done`、正则写错直接报出哪一步。
+    正则字段统一接受 `"/…/flags"` 或不带斜杠的正则（以前 `agent` 里不带斜杠会报 `null.test`）。
+  - 输出写 `.mp4` 时用完整 ffmpeg（`FFMPEG`、promo 工具目录里的，或 PATH 上的）转码，`.webm` 保留。
+  - SKILL.md 的描述改成 YAML 折叠写法：原来单行里的 `Playwright: page tours` 让 YAML 解析失败，agent 看不到这个 skill 的描述。
+    描述里写清和 product-promo-video 的分工，命令示例不再写死 `~/.agents` 路径。
+- 幻灯片检查：截图每次换新文件名并删掉上一轮的（看图工具按路径缓存）；新增正文（`p`/`li`/`td`）小于 15px 的 `small-text`；
+  非 Windows 默认用 Chrome；不是按模板做的页面直接说明。SKILL.md 去掉会让 Claude Code 加载出错的行内代码。
+- 两个新 skill 的 playwright-core 锁定到和工具目录相同的 1.65.0，找不到自己的 `node_modules` 时用 `~/.promo-tools` 里的。
+- 宣传片：`render.mjs` 全量渲染有页面报错时退出码为 1（和预览一致）；`verify.mjs` 测不出响度时报问题，不再显示 OK；
+  `tts.mjs` 遇到一句旁白都没有的脚本时说明原因，不再让 ffmpeg 报 `amix=inputs=0`。`narrated.md` 的录屏改为指向 demo-screen-recording。
+- 测试：frontmatter（含 YAML 写法）、行内代码、链接、脚本解析、JSON、版本号覆盖全部 skill；新增安装全部 skill、录屏失败不留目录、
+  流程校验的测试。
 
 ## 1.1.0 — 2026-11-06
 
@@ -29,7 +53,7 @@
 第一次作为独立工程发布。之前这个 skill 只在一台机器的 skill 目录里，没有版本。
 
 - 工程：git 仓库、`promo` 命令、单元测试和端到端测试、README、NOTICE。
-- 工具版本锁定在 `skill/product-promo-video/deps/`（playwright-core 1.65.0、imageio-ffmpeg 0.8.1、edge-tts 7.3.1）；
+- 工具版本锁定在 `skills/product-promo-video/deps/`（playwright-core 1.65.0、imageio-ffmpeg 0.8.1、edge-tts 7.3.1）；
   `setup.mjs` 只装缺的或版本不对的。
 - 离线：`setup.mjs --pack <dir>` 在有网的机器上写离线包（包、wheel 和一份 skill），`--from <dir>` 在没网的机器上装。
 - `doctor.mjs`：检查 Node、工具版本、浏览器、ffmpeg 编码器、中文字体、旁白。

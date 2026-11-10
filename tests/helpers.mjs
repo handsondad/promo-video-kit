@@ -1,12 +1,15 @@
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readdirSync, rmSync, statSync } from 'node:fs';
+import { existsSync, mkdtempSync, readdirSync, rmSync, statSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const REPO = dirname(dirname(fileURLToPath(import.meta.url)));
-export const SKILL = join(REPO, 'skill', 'product-promo-video');
+export const SKILLS = join(REPO, 'skills');
+export const SKILL = join(SKILLS, 'product-promo-video');
 export const SCRIPTS = join(SKILL, 'scripts');
+// Every skill the kit ships: skills/<name>/ with a SKILL.md.
+export const ALL_SKILLS = readdirSync(SKILLS).map((d) => join(SKILLS, d)).filter((d) => existsSync(join(d, 'SKILL.md')));
 
 // Runs a skill script with node; env adds to (or with undefined, removes from) the current environment.
 export function node(script, args = [], { cwd = REPO, env = {} } = {}) {

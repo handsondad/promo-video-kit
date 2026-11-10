@@ -10,7 +10,7 @@
 
 ## 运行时依赖
 
-由 `setup.mjs` 按 `skill/product-promo-video/deps/` 里锁定的版本装进工具目录，不随本仓库分发。
+由 `setup.mjs` 按 `skills/product-promo-video/deps/` 里锁定的版本装进工具目录，不随本仓库分发。
 
 | 包 | 许可 | 用途 |
 |---|---|---|

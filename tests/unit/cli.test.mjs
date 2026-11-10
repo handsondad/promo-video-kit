@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { test } from 'node:test';
-import { REPO, SKILL, node } from '../helpers.mjs';
+import { REPO, SKILL, SKILLS, node } from '../helpers.mjs';
 
 const promo = (...args) => node(join(REPO, 'bin', 'promo.mjs'), args);
 
@@ -18,9 +18,10 @@ test('help lists every command, and each maps to a script', () => {
   const names = [...r.stdout.matchAll(/^ {2}([a-z]+) /gm)].map((m) => m[1]);
   assert.ok(names.length >= 12, names.join(','));
   const source = readFileSync(join(REPO, 'bin', 'promo.mjs'), 'utf8');
-  const scripts = [...source.matchAll(/^\s+[a-z]+: \['([a-z-]+)',/gm)].map((m) => m[1]);
+  const scripts = [...source.matchAll(/^\s+[a-z]+: \['([a-z-]+)', '[^']*'(?:, '([a-z-]+)')?\]/gm)].map((m) => [m[1], m[2] ?? 'product-promo-video']);
   assert.equal(scripts.length, names.length);
-  for (const script of scripts) assert.ok(existsSync(join(SKILL, 'scripts', `${script}.mjs`)), script);
+  for (const [script, skill] of scripts) assert.ok(existsSync(join(SKILLS, skill, 'scripts', `${script}.mjs`)), `${skill}/${script}`);
+  assert.ok(names.includes('record') && names.includes('deck'), 'the recorder and the deck checker are commands too');
 });
 
 test('an unknown command exits 2', () => {

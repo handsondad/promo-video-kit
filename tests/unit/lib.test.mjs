@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { test } from 'node:test';
-import { normalizeTimeline, readJson } from '../../skill/product-promo-video/scripts/lib.mjs';
+import { normalizeTimeline, readJson } from '../../skills/product-promo-video/scripts/lib.mjs';
 import { scratch } from '../helpers.mjs';
 
 test('scenes without a start follow each other and the total is their sum', () => {

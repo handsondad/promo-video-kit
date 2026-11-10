@@ -4,7 +4,7 @@ description: >-
   Makes finished MP4 product promo, explainer and launch videos from HTML rendered frame by frame (headless Edge/Chrome,
   ffmpeg), with edge-tts narration or a synthesised score; narrated or motion cuts, eight styles or the user's own, any
   aspect ratio. Use for a 宣传片, 产品视频, 演示视频, promo, explainer, launch or trailer video, for turning a demo, deck or
-  screenshots into a video, or for matching a reference video or a style.
+  screenshots into a video, or for matching a reference video or a style. Raw screen capture: demo-screen-recording.
 ---
 
 # 产品宣传片：HTML 逐帧渲染，多种风格

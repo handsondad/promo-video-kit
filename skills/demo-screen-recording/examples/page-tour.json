@@ -1,0 +1,9 @@
+{
+  "config": { "name": "page-tour", "url": "https://example.com/", "timeoutMin": 5 },
+  "steps": [
+    { "shot": "home", "after": 1500 },
+    { "click": "role=link[name=/more|了解/i]", "optional": true, "after": 2500 },
+    { "scroll": "body", "steps": 4 },
+    { "shot": "end" }
+  ]
+}

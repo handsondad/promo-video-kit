@@ -61,3 +61,4 @@ encoder.stdin.end();
 await done;
 await browser.close();
 console.log(`wrote ${out} (${total.toFixed(1)} s, ${frames} frames, ${((Date.now() - started) / 1000).toFixed(0)} s${timeline.style ? `, style ${timeline.style}` : ''})${errors.length ? ` | ${errors.length} page error(s)` : ''}`);
+process.exitCode = errors.length ? 1 : 0;

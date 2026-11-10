@@ -2,12 +2,12 @@
 // playwright-core (drives the installed Edge/Chrome) and a Python venv with imageio-ffmpeg (a full ffmpeg) and edge-tts.
 // Safe to re-run: only what is missing or at another version is installed. Ends with doctor.mjs.
 //   node setup.mjs [--no-tts]              install from the npm and PyPI registries
-//   node setup.mjs --pack <dir> [--no-tts] then write an offline bundle there: the packages plus a copy of this skill
+//   node setup.mjs --pack <dir> [--no-tts] then write an offline bundle there: the packages plus a copy of the kit's skills
 //   node setup.mjs --from <dir>            install from such a bundle, without network
 // A bundle fits only the OS, CPU and Python minor version it was packed on (ffmpeg and aiohttp ship binary wheels).
 import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
-import { PINNED, SKILL, TOOLS, VERSION, WIN, arg, installedPlaywright, python, readJson, run } from './lib.mjs';
+import { PINNED, SKILL, TOOLS, VERSION, WIN, arg, installedPlaywright, kitSkills, python, readJson, run } from './lib.mjs';
 
 const DEPS = join(SKILL, 'deps');
 const packDir = typeof arg('pack') === 'string' ? resolve(arg('pack')) : null;
@@ -43,7 +43,7 @@ function readBundle(dir) {
   if (b.platform !== process.platform || b.arch !== process.arch) {
     throw new Error(`the bundle was packed on ${b.platform}-${b.arch}; this machine is ${process.platform}-${process.arch}. Pack one on a matching machine.`);
   }
-  if (b.playwright !== PINNED) throw new Error(`the bundle has playwright-core ${b.playwright}, this skill pins ${PINNED}; use the skill copy inside the bundle (skill/)`);
+  if (b.playwright !== PINNED) throw new Error(`the bundle has playwright-core ${b.playwright}, this skill pins ${PINNED}; use the skill copy inside the bundle (skills/)`);
   return b;
 }
 
@@ -102,10 +102,10 @@ if (packDir) {
   mkdirSync(join(packDir, 'npm'), { recursive: true });
   must(npm(['pack', `playwright-core@${PINNED}`, '--pack-destination', join(packDir, 'npm')], { stdio: 'inherit' }), 'npm pack');
   must(run(py, ['-m', 'pip', 'download', '-q', '--disable-pip-version-check', '-d', join(packDir, 'wheels'), ...reqs.flatMap((r) => ['-r', r])], { stdio: 'inherit' }), 'pip download');
-  cpSync(SKILL, join(packDir, 'skill', basename(SKILL)), { recursive: true });
+  for (const s of kitSkills()) cpSync(s, join(packDir, 'skills', basename(s)), { recursive: true, filter: (p) => basename(p) !== 'node_modules' });
   const info = { skill: VERSION, playwright: PINNED, platform: process.platform, arch: process.arch, python: pyMinor(py), tts, packed: new Date().toISOString() };
   writeFileSync(join(packDir, 'bundle.json'), `${JSON.stringify(info, null, 2)}\n`);
-  const here = `skill/${basename(SKILL)}/scripts`;
+  const here = `skills/${basename(SKILL)}/scripts`;
   writeFileSync(join(packDir, 'README.txt'), [
     `promo 离线安装包 · skill ${VERSION} · ${process.platform}-${process.arch} · Python ${info.python}`,
     '',

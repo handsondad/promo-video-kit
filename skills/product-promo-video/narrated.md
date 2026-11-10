@@ -12,7 +12,9 @@ node <skill>/scripts/init.mjs --dir .promo/film --cut narrated --style editorial
 ## 1. 素材
 
 **录屏**（证明"真能用"的主力）：
-- 已有录屏（webm/mp4）直接用；没有就用 Playwright 录：`browser.newContext({ viewport: {width:1920,height:1080}, recordVideo: { dir, size: {width:1920,height:1080} } })`，脚本驱动真实操作。
+- 已有录屏（webm/mp4）直接用；没有就用 demo-screen-recording skill 录（同一个仓库、同一次 `install` 装好）：写一份流程 JSON，
+  `config.viewport` 设成片子的尺寸（`{ "width": 1920, "height": 1080 }`，它默认是 1600×900），它会驱动真实操作、等 agent 跑完，
+  并留下逐步截图用来核对。没有这个 skill 时，自己用 Playwright 的 `recordVideo` 录，尺寸同样设成片子的尺寸。
 - 抽帧成图片序列（快进段 2–3 fps 足够，体积小、可随意变速）：
   ```bash
   ffmpeg -ss 24 -to 62 -i rec.webm -vf "fps=3" -q:v 3 frames/step1/%04d.jpg

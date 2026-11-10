@@ -1,42 +1,88 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
-import { dirname, extname, join, relative } from 'node:path';
+import { basename, dirname, extname, join, relative, sep } from 'node:path';
 import { test } from 'node:test';
-import { PALETTES } from '../../skill/product-promo-video/scripts/music.mjs';
-import { REPO, SKILL, walk } from '../helpers.mjs';
+import { PALETTES } from '../../skills/product-promo-video/scripts/music.mjs';
+import { ALL_SKILLS, REPO, SKILL, walk } from '../helpers.mjs';
 
 const read = (p) => readFileSync(p, 'utf8');
-const files = walk(SKILL);
+const all = ALL_SKILLS.flatMap((dir) => walk(dir));
+const of = (dir) => all.filter((f) => f.startsWith(dir + sep));
+
+test('the kit ships the three skills', () => {
+  const names = ALL_SKILLS.map((d) => basename(d)).sort();
+  for (const n of ['demo-screen-recording', 'html-briefing-deck', 'product-promo-video']) assert.ok(names.includes(n), n);
+});
 
 test('every script parses', () => {
-  const scripts = [...files.filter((f) => f.endsWith('.mjs')), join(SKILL, 'templates', 'kit.js'), ...walk(join(REPO, 'bin'))];
-  for (const f of files.filter((f) => /styles[\\/][^\\/]+[\\/]style\.js$/.test(f))) scripts.push(f);
+  const scripts = [...all.filter((f) => /\.m?js$/.test(f)), ...walk(join(REPO, 'bin'))];
   for (const f of scripts) {
     const r = spawnSync(process.execPath, ['--check', f], { encoding: 'utf8' });
     assert.equal(r.status, 0, `${relative(REPO, f)}: ${r.stderr}`);
   }
 });
 
-test('SKILL.md frontmatter loads in every agent: known keys, a short description', () => {
-  const head = read(join(SKILL, 'SKILL.md')).match(/^---\r?\n([\s\S]*?)\r?\n---/);
+// The subset of YAML a SKILL.md header uses. A plain (unquoted, single-line) value must not hold ": " or " #": a strict
+// YAML parser rejects the first and cuts the value at the second, and the agent then sees no description at all.
+function frontmatter(text) {
+  const head = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   assert.ok(head, 'frontmatter');
-  const keys = [...head[1].matchAll(/^([a-z-]+):/gm)].map((m) => m[1]);
-  for (const k of keys) assert.ok(['name', 'description', 'license', 'allowed-tools', 'metadata'].includes(k), `frontmatter key ${k}`);
-  assert.match(head[1], /^name: product-promo-video$/m);
-  const description = head[1].split(/^description:/m)[1].replace(/^\s*>-?/, '').replace(/\s+/g, ' ').trim();
-  assert.ok(Buffer.byteLength(description) <= 512, `description is ${Buffer.byteLength(description)} bytes; agents list every skill's description, keep it ≤ 512`);
+  const out = {};
+  const lines = head[1].split(/\r?\n/);
+  for (let i = 0; i < lines.length; i += 1) {
+    const m = /^([a-z-]+):(?: (.*))?$/.exec(lines[i]);
+    assert.ok(m, `frontmatter line ${i + 1} is not "key: value": ${lines[i]}`);
+    const [, key, raw = ''] = m;
+    if (/^[>|][-+]?$/.test(raw.trim())) {
+      const block = [];
+      while (i + 1 < lines.length && /^\s+\S|^\s*$/.test(lines[i + 1])) block.push(lines[++i].trim());
+      out[key] = block.join(' ').trim();
+    } else if (/^["']/.test(raw)) {
+      out[key] = raw.slice(1, -1);
+    } else {
+      assert.ok(!/: | #/.test(raw), `frontmatter ${key}: a plain value with ": " or " #" breaks YAML; use "${key}: >-" and indent the text`);
+      assert.ok(!/^[[\]{}&*!%@`]/.test(raw), `frontmatter ${key}: a plain value cannot start with ${raw[0]}`);
+      out[key] = raw.trim();
+    }
+  }
+  return out;
+}
+
+test('every SKILL.md frontmatter loads in every agent: valid YAML, known keys, its own name, a short description', () => {
+  for (const dir of ALL_SKILLS) {
+    const where = relative(REPO, join(dir, 'SKILL.md'));
+    const head = frontmatter(read(join(dir, 'SKILL.md')));
+    for (const k of Object.keys(head)) assert.ok(['name', 'description', 'license', 'allowed-tools', 'metadata'].includes(k), `${where}: frontmatter key ${k}`);
+    assert.equal(head.name, basename(dir), `${where}: name`);
+    assert.ok(head.description, `${where}: description`);
+    const bytes = Buffer.byteLength(head.description);
+    assert.ok(bytes <= 512, `${where}: description is ${bytes} bytes; agents list every skill's description, keep it ≤ 512`);
+  }
+});
+
+test('the frontmatter check rejects a plain description with a colon', () => {
+  assert.throws(() => frontmatter('---\nname: x\ndescription: Records with Playwright: tours\n---\n'), /breaks YAML/);
+  assert.equal(frontmatter('---\nname: x\ndescription: >-\n  Records with Playwright: tours\n---\n').description, 'Records with Playwright: tours');
 });
 
 test('inline code in the docs survives Claude Code skill loading (no ! and no > before a word)', () => {
-  for (const f of files.filter((f) => f.endsWith('.md'))) {
+  for (const f of all.filter((f) => f.endsWith('.md'))) {
     const text = read(f).replace(/^```[\s\S]*?^```/gm, '');
     for (const [code] of text.matchAll(/`[^`\n]+`/g)) assert.ok(!/!|>\w/.test(code), `${relative(REPO, f)}: ${code}`);
   }
 });
 
 test('every JSON file parses', () => {
-  for (const f of files.filter((f) => f.endsWith('.json'))) assert.doesNotThrow(() => JSON.parse(read(f)), relative(REPO, f));
+  for (const f of all.filter((f) => f.endsWith('.json'))) assert.doesNotThrow(() => JSON.parse(read(f)), relative(REPO, f));
+});
+
+test('the recorder and deck checker pin the playwright-core the promo tools pin', () => {
+  const pin = JSON.parse(read(join(SKILL, 'deps', 'package.json'))).dependencies['playwright-core'];
+  for (const dir of ALL_SKILLS.filter((d) => existsSync(join(d, 'package.json')))) {
+    assert.equal(JSON.parse(read(join(dir, 'package.json'))).dependencies['playwright-core'], pin, relative(REPO, dir));
+    assert.equal(JSON.parse(read(join(dir, 'package-lock.json'))).packages['node_modules/playwright-core'].version, pin, `${relative(REPO, dir)} lock`);
+  }
 });
 
 test('every style is complete and names its own slug and a known sound palette', () => {
@@ -56,22 +102,25 @@ test('every style is complete and names its own slug and a known sound palette',
 });
 
 test('relative links and script references in the docs resolve', () => {
-  for (const f of files.filter((f) => extname(f) === '.md')) {
-    const text = read(f);
-    for (const [, href] of text.matchAll(/\]\(([^)#\s]+)(?:#[^)]*)?\)/g)) {
-      if (/^[a-z]+:/i.test(href)) continue;
-      assert.ok(existsSync(join(dirname(f), href)), `${relative(REPO, f)} links to missing ${href}`);
-    }
-    for (const [, name] of text.matchAll(/\b([a-z][a-z-]+)\.mjs\b/g)) {
-      assert.ok(existsSync(join(SKILL, 'scripts', `${name}.mjs`)), `${relative(REPO, f)} mentions missing ${name}.mjs`);
+  const names = new Set(all.map((f) => basename(f)));
+  for (const dir of ALL_SKILLS) {
+    for (const f of of(dir).filter((f) => extname(f) === '.md')) {
+      const text = read(f);
+      for (const [, href] of text.matchAll(/\]\(([^)#\s]+)(?:#[^)]*)?\)/g)) {
+        if (/^[a-z]+:/i.test(href)) continue;
+        assert.ok(existsSync(join(dirname(f), href)), `${relative(REPO, f)} links to missing ${href}`);
+      }
+      for (const [, name] of text.matchAll(/(?<![<\w-])([a-z][a-z-]+)\.mjs\b/g)) {
+        assert.ok(names.has(`${name}.mjs`), `${relative(REPO, f)} mentions missing ${name}.mjs`);
+      }
     }
   }
 });
 
-test('the skill, the package and the changelog agree on the version', () => {
-  const version = read(join(SKILL, 'VERSION')).trim();
+test('every skill, the package and the changelog agree on the version', () => {
+  const version = JSON.parse(read(join(REPO, 'package.json'))).version;
   assert.match(version, /^\d+\.\d+\.\d+$/);
-  assert.equal(JSON.parse(read(join(REPO, 'package.json'))).version, version);
+  for (const dir of ALL_SKILLS) assert.equal(read(join(dir, 'VERSION')).trim(), version, `${relative(REPO, dir)}/VERSION`);
   assert.match(read(join(REPO, 'CHANGELOG.md')), new RegExp(`^## ${version.replaceAll('.', '\\.')}\\b`, 'm'));
 });
 

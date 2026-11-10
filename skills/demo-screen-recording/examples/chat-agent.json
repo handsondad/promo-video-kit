@@ -1,0 +1,20 @@
+{
+  "config": { "name": "chat-agent-demo", "url": "http://127.0.0.1:3000/", "timeoutMin": 20 },
+  "steps": [
+    { "click": "role=button[name=/新建对话|New chat/]", "optional": true, "after": 1500 },
+    { "fill": "placeholder=/输入|Ask|Message/", "text": "<你的演示问题>" },
+    { "press": "placeholder=/输入|Ask|Message/", "key": "Enter" },
+    { "agent": {
+        "buttonHint": "/批准|同意|确认|Approve|Run/",
+        "approve": "/^(批准|同意|确认|开始运行|Approve|Run)$/",
+        "done": "/已完成|任务成功|Completed/",
+        "onText": [ { "when": "/正在运行|Running/", "click": "role=tab[name=/运行|Runs/]", "shot": "running" } ],
+        "nudge": { "box": "placeholder=/输入|Ask|Message/", "text": "继续", "busy": "/思考中|正在思考|Thinking/", "until": 0 },
+        "stallSec": 300 } },
+    { "settle": 15000 },
+    { "shot": "result" },
+    { "click": "role=tab[name=/报告|Report/]", "optional": true, "after": 4000 },
+    { "scroll": "main", "steps": 6, "optional": true },
+    { "shot": "report" }
+  ]
+}

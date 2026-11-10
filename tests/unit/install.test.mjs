@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
-import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { cpSync, existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { basename, join } from 'node:path';
 import { test } from 'node:test';
-import { SKILL, node, scratch } from '../helpers.mjs';
+import { ALL_SKILLS, SKILL, node, scratch } from '../helpers.mjs';
 
 test('install copies the skill, backs up what it replaces, links and unlinks without touching the source', (t) => {
   const root = scratch(t);
@@ -20,18 +20,51 @@ test('install copies the skill, backs up what it replaces, links and unlinks wit
   assert.ok(!existsSync(join(tools, 'backup')), 'nothing to back up the first time');
 
   writeFileSync(join(dest, 'local-note.md'), 'edited in place');
-  install();
+  install('--skill', 'product-promo-video');
   assert.ok(!existsSync(join(dest, 'local-note.md')), 'a reinstall replaces the copy');
   assert.equal(readdirSync(join(tools, 'backup')).filter((f) => f.endsWith('.tar.gz')).length, 1, 'the replaced copy is backed up');
 
-  install('--link');
+  install('--link', '--skill', 'product-promo-video');
   assert.ok(lstatSync(dest).isSymbolicLink(), 'a link');
   assert.ok(existsSync(join(dest, 'SKILL.md')), 'the link resolves');
 
-  const r = install();
+  const r = install('--skill', 'product-promo-video');
   assert.match(r.stdout, /replaced a link/);
   assert.ok(!lstatSync(dest).isSymbolicLink());
   assert.ok(existsSync(join(SKILL, 'SKILL.md')), 'the source survives replacing the link');
+});
+
+test('from the kit it installs every skill, without node_modules; --skill picks; an unknown one fails', (t) => {
+  const root = scratch(t);
+  const skills = join(root, 'skills'), env = { PROMO_TOOLS: join(root, 'tools') };
+  const r = node('install.mjs', ['--target', skills], { env });
+  assert.equal(r.status, 0, r.stderr);
+  for (const dir of ALL_SKILLS) {
+    const dest = join(skills, basename(dir));
+    assert.ok(existsSync(join(dest, 'SKILL.md')), basename(dir));
+    assert.equal(readFileSync(join(dest, 'VERSION'), 'utf8'), readFileSync(join(dir, 'VERSION'), 'utf8'));
+    assert.ok(!existsSync(join(dest, 'node_modules')), `${basename(dir)}: node_modules is not copied`);
+  }
+
+  const only = join(root, 'only');
+  const picked = node('install.mjs', ['--target', only, '--skill', 'html-briefing-deck'], { env });
+  assert.equal(picked.status, 0, picked.stderr);
+  assert.deepEqual(readdirSync(only), ['html-briefing-deck']);
+
+  const bad = node('install.mjs', ['--target', only, '--skill', 'nope'], { env });
+  assert.notEqual(bad.status, 0);
+  assert.match(bad.stderr, /--skill nope: expected .*product-promo-video/);
+});
+
+test('an installed copy outside the kit installs only itself', (t) => {
+  const root = scratch(t);
+  const copy = join(root, 'agent-skills', 'product-promo-video');
+  cpSync(SKILL, copy, { recursive: true });
+  mkdirSync(join(root, 'agent-skills', 'someone-elses-skill'));
+  writeFileSync(join(root, 'agent-skills', 'someone-elses-skill', 'SKILL.md'), 'not ours');
+  const r = node(join(copy, 'scripts', 'install.mjs'), ['--target', join(root, 'out')], { env: { PROMO_TOOLS: join(root, 'tools') } });
+  assert.equal(r.status, 0, r.stderr);
+  assert.deepEqual(readdirSync(join(root, 'out')), ['product-promo-video']);
 });
 
 test('an unknown agent fails with the choices', () => {
